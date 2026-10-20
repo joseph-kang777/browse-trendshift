@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd web && npm ci",
+  "buildCommand": "cd web && npm run build",
+  "outputDirectory": "web/dist",
+  "functions": {
+    "api/**/*.ts": { "includeFiles": "deploy-index/**" }
+  },
+  "git": { "deploymentEnabled": false }
+}

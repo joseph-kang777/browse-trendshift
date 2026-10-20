@@ -57,6 +57,23 @@ powershell -ExecutionPolicy Bypass -File schedule_daily.ps1   # 매일 10:00 실
 - 실행 중인 서버는 인덱스가 바뀌면 다음 요청 때 자동으로 새 인덱스를 읽습니다.
 - 해제: `Unregister-ScheduledTask -TaskName BrowseTrendshiftUpdate -Confirm:$false`
 
+## 무료 배포 (Vercel + Cloudflare Workers AI + GitHub Actions)
+
+배포판에는 GPU 서버가 필요 없습니다. 인덱스를 int8로 내보내고(`export_index.py`, 약 44MB) Vercel 함수(`api/`)가
+검색하며, 검색어는 같은 bge-m3 모델로 [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)에서
+임베딩합니다(무료: 하루 10,000 neurons ≈ 입력 900만 토큰). GitHub Actions(`.github/workflows/daily.yml`)가 매일
+데이터를 갱신하고 다시 배포합니다.
+
+1. Cloudflare: **Workers AI: Read** 권한의 API 토큰을 만들어 `.env`에 넣고(`.env.example` 참고),
+   Workers AI가 로컬과 같은 벡터를 내는지 확인합니다: `uv run check_cloudflare.py`
+2. Vercel: `npx vercel link`(조직·프로젝트 ID가 담긴 `.vercel/project.json` 생성) 후 Vercel 환경변수에
+   `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`을 넣습니다.
+3. GitHub secrets: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
+4. 워크플로를 backend `local`로 한 번 직접 실행합니다(러너 CPU로 전체 임베딩, 몇 시간).
+   이후로는 매일 01:00 UTC에 새 텍스트만 Cloudflare로 임베딩합니다.
+
+데이터는 git이 아니라 Actions 캐시에 보관합니다. 캐시가 지워지면(7일간 실행 없음) 4단계를 다시 실행하세요.
+
 ## 동작 방식
 
 - **수집**: trendshift 홈페이지의 날짜 선택기는 Next.js Server Action

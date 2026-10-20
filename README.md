@@ -58,6 +58,23 @@ powershell -ExecutionPolicy Bypass -File schedule_daily.ps1   # register a Task 
 - A running server picks up the new index on the next request after it changes.
 - Remove: `Unregister-ScheduledTask -TaskName BrowseTrendshiftUpdate -Confirm:$false`
 
+## Free hosting (Vercel + Cloudflare Workers AI + GitHub Actions)
+
+The hosted version needs no GPU server: the index is exported as int8 (`export_index.py`, ~44 MB),
+Vercel functions (`api/`) search it, and queries are embedded with the same bge-m3 model on
+[Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) (free: 10,000 neurons/day ≈ 9M input tokens).
+A GitHub Actions workflow (`.github/workflows/daily.yml`) updates the data daily and redeploys.
+
+1. Cloudflare: create an API token with **Workers AI: Read**, put it in `.env` (see `.env.example`), and check
+   that Workers AI reproduces the local vectors: `uv run check_cloudflare.py`.
+2. Vercel: `npx vercel link` (creates `.vercel/project.json` with the org and project IDs), then add
+   `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` as Vercel environment variables.
+3. GitHub secrets: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+4. Run the workflow once by hand with backend `local` (full build on the runner CPU, a few hours).
+   After that it runs daily at 01:00 UTC and only embeds new text, on Cloudflare.
+
+Data lives in the Actions cache, not in git. If the cache is evicted (no run for 7 days), run step 4 again.
+
 ## How it works
 
 - **Collection**: trendshift's date picker calls the Next.js Server Action

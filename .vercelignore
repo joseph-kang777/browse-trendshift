@@ -1,0 +1,9 @@
+# The deploy needs web/, api/ and deploy-index/ (built by export_index.py) only.
+.venv
+data
+web/node_modules
+web/dist
+*.py
+uv.lock
+pyproject.toml
+docs

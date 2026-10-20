@@ -118,7 +118,10 @@ def load_model(name: str):
     return SentenceTransformer(name, device="cuda" if torch.cuda.is_available() else "cpu")
 
 
-def build_index(model_name: str = DEFAULT_MODEL) -> int:
+def build_index(model_name: str = DEFAULT_MODEL, backend: str = "local") -> int:
+    """backend "cloudflare" embeds new text with bge-m3 on Workers AI instead of loading the model."""
+    if backend == "cloudflare" and model_name != "BAAI/bge-m3":
+        raise ValueError("Workers AI only hosts BAAI/bge-m3")
     repos = aggregate()
     prefix = MODELS[model_name][1]
     chunk_texts, chunk_owner = [], []
@@ -140,7 +143,10 @@ def build_index(model_name: str = DEFAULT_MODEL) -> int:
     todo = sorted({k: t for k, t in zip(meta_keys + chunk_keys, meta_texts + chunk_texts) if k not in cache}.items(),
                   key=lambda kt: -len(kt[1]))  # longest first keeps batches evenly padded -> faster
     print(f"{len(cache)} cached vectors, {len(todo)} texts to embed")
-    if todo:
+    if todo and backend == "cloudflare":
+        from cloudflare_ai import embed
+        cache.update(zip((k for k, _ in todo), embed([t for _, t in todo], progress=len(todo) > 500)))
+    elif todo:
         model = load_model(model_name)
         model.max_seq_length = 512
         vecs = model.encode([t for _, t in todo], batch_size=32, normalize_embeddings=True,

@@ -3,3 +3,6 @@ __pycache__/
 data/
 web/node_modules/
 web/dist/
+.env
+deploy-index/
+.vercel/
