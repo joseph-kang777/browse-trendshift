@@ -70,6 +70,6 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          npx --yes vercel@62.4.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
-          npx --yes vercel@62.4.0 build --prod --token="$VERCEL_TOKEN"
-          npx --yes vercel@62.4.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+          npx --yes vercel@64.7.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@64.7.0 build --prod --token="$VERCEL_TOKEN"
+          npx --yes vercel@64.7.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
