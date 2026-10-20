@@ -1,9 +1,9 @@
 # Daily: new trendshift days -> READMEs of new repos -> incremental index -> deploy to Vercel.
 #
 # data/ (daily rankings, READMEs, full index) lives in the Actions cache, not in git.
-# The first run has nothing cached: start it by hand with backend "local" to embed
-# everything with bge-m3 on the runner CPU (a few hours). Later runs embed only new
-# text, on Cloudflare Workers AI.
+# The first run has no vectors cached: it restores the locally built ones from the
+# draft release "index-seed" if present (backend "local", a full CPU embed on the runner,
+# does not finish within the 6 h job limit). Runs embed only new text, on Cloudflare Workers AI.
 #
 # Secrets: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
 name: Daily update
@@ -25,6 +25,8 @@ jobs:
   update:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    permissions:
+      contents: write # read the draft "index-seed" release (drafts need push access)
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.0
@@ -35,6 +37,18 @@ jobs:
           path: data
           key: data-${{ github.run_id }}
           restore-keys: data-
+
+      # No cached vectors yet: start from the ones built locally (draft release "index-seed",
+      # same model and text keys) so only text that differs is embedded.
+      - name: Seed vectors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -f data/index/keys.json ] && gh release view index-seed >/dev/null 2>&1; then
+            mkdir -p data/index
+            gh release download index-seed -p index-seed.tar.gz -O - | tar -xz -C data/index
+            echo "seeded $(ls data/index)"
+          fi
 
       - name: Update data and index
         env:

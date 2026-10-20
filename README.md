@@ -72,10 +72,12 @@ A GitHub Actions workflow (`.github/workflows/daily.yml`) updates the data daily
 2. Vercel: `npx vercel link` (creates `.vercel/project.json` with the org and project IDs), then add
    `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` as Vercel environment variables.
 3. GitHub secrets: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
-4. Run the workflow once by hand with backend `local` (full build on the runner CPU, a few hours).
-   After that it runs daily at 01:00 UTC and only embeds new text, on Cloudflare.
+4. Seed the vectors you built locally (a full CPU embed does not fit in the runner's 6-hour limit):
+   pack `data/index/{keys.json,embeddings.npy,chunk_embeddings.npy,meta.json}` as `index-seed.tar.gz` and
+   `gh release create index-seed index-seed.tar.gz --draft`. Then run the workflow by hand once.
+   It runs daily at 01:00 UTC and only embeds new text, on Cloudflare.
 
-Data lives in the Actions cache, not in git. If the cache is evicted (no run for 7 days), run step 4 again.
+Data lives in the Actions cache, not in git. If the cache is evicted (no run for 7 days), the next run starts again from the seed.
 
 ## How it works
 

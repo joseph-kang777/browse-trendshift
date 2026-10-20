@@ -71,10 +71,12 @@ powershell -ExecutionPolicy Bypass -File schedule_daily.ps1   # 매일 10:00 실
 2. Vercel: `npx vercel link`(조직·프로젝트 ID가 담긴 `.vercel/project.json` 생성) 후 Vercel 환경변수에
    `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`을 넣습니다.
 3. GitHub secrets: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
-4. 워크플로를 backend `local`로 한 번 직접 실행합니다(러너 CPU로 전체 임베딩, 몇 시간).
-   이후로는 매일 01:00 UTC에 새 텍스트만 Cloudflare로 임베딩합니다.
+4. 로컬에서 만든 벡터를 시드로 올립니다(러너 CPU 전체 임베딩은 6시간 제한 안에 끝나지 않음):
+   `data/index/{keys.json,embeddings.npy,chunk_embeddings.npy,meta.json}`을 `index-seed.tar.gz`로 묶어
+   `gh release create index-seed index-seed.tar.gz --draft`. 그다음 워크플로를 한 번 직접 실행합니다.
+   이후 매일 01:00 UTC에 새 텍스트만 Cloudflare로 임베딩합니다.
 
-데이터는 git이 아니라 Actions 캐시에 보관합니다. 캐시가 지워지면(7일간 실행 없음) 4단계를 다시 실행하세요.
+데이터는 git이 아니라 Actions 캐시에 보관합니다. 캐시가 지워지면(7일간 실행 없음) 다음 실행이 시드부터 다시 시작합니다.
 
 ## 동작 방식
 
