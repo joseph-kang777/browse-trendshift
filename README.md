@@ -5,6 +5,11 @@
 Collects every day of [trendshift.io](https://trendshift.io)'s daily trending repositories (2024-01-01 to today)
 and helps you find the project you need with natural-language similarity search (English, Korean and more).
 
+![Trendshift Finder: searching "local speech recognition"](docs/screenshot-en.png)
+
+Describe what you need and get trending repositories ranked by how well their description, topics and README match,
+or pick a repository and find similar ones. Filter by language, when it trended and stars.
+
 ## Usage
 
 ```bash
