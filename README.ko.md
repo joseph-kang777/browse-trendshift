@@ -2,6 +2,8 @@
 
 [English](README.md) | **한국어**
 
+**바로 써보기: https://browse-trendshift.vercel.app**
+
 [trendshift.io](https://trendshift.io)의 날짜별 일간 트렌딩 저장소(2024-01-01~오늘)를 모두 수집하고,
 원하는 프로젝트를 자연어(한국어/영어) 유사도 검색으로 찾아줍니다.
 

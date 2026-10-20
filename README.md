@@ -2,6 +2,8 @@
 
 **English** | [한국어](README.ko.md)
 
+**Live demo: https://browse-trendshift.vercel.app**
+
 Collects every day of [trendshift.io](https://trendshift.io)'s daily trending repositories (2024-01-01 to today)
 and helps you find the project you need with natural-language similarity search (English, Korean and more).
 
