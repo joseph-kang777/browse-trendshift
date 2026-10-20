@@ -27,7 +27,7 @@ jobs:
     timeout-minutes: 350
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.0
 
       - name: Restore data
         uses: actions/cache/restore@v6
