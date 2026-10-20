@@ -1,0 +1,22 @@
+[project]
+name = "browse-trendshift"
+version = "0.1.0"
+description = "Collect trendshift.io daily trending repos and find projects by semantic similarity"
+requires-python = ">=3.11"
+dependencies = [
+    "requests",
+    "numpy",
+    "sentence-transformers",
+    "torch",
+    "fastapi>=0.146.0",
+    "uvicorn>=0.54.0",
+]
+
+# CUDA build of torch (RTX 50xx needs cu128+) for faster embedding; CPU still works.
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

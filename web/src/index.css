@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "./solid-glass.css";
+
+/* Hangul isn't in Geist; fall through to the OS Korean face before the generic fallbacks. */
+@theme inline {
+  --font-sans: "Geist Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  /* Something for the glass to sit over: two faint pools of light, so the panes read as panes. */
+  body {
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(60rem 40rem at 10% -10%, oklch(0.6 0.08 265 / 10%), transparent 70%),
+      radial-gradient(50rem 30rem at 100% 0%, oklch(0.6 0.08 200 / 7%), transparent 70%);
+    background-attachment: fixed;
+  }
+}

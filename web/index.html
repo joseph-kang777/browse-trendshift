@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trendshift Finder</title>
+    <style>
+      html { background: oklch(0.925 0.007 265); }
+      html.dark { background: oklch(0.16 0 0); color-scheme: dark; }
+    </style>
+    <script>
+      // Before first paint: saved theme, otherwise dark (Solid Glass's material as designed).
+      (function () {
+        var saved = null
+        try { saved = localStorage.getItem("tf:theme") } catch (e) {}
+        document.documentElement.classList.toggle("dark", saved !== "light")
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
