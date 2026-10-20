@@ -92,3 +92,7 @@ Data lives in the Actions cache, not in git. If the cache is evicted (no run for
   (`--readme-weight`, default 0.5), plus a small boost (`popularity_weight`) for repos that trended on many days.
   For a lighter model, use `build_index.py --model intfloat/multilingual-e5-small`.
 - **GPU**: `pyproject.toml` installs torch built for CUDA 12.8 (supports RTX 50 series). Without a GPU it runs on CPU.
+
+## License
+
+MIT. The UI components in `web/` come from [Solid Glass](https://github.com/deeplethe/solid-glass) (MIT, see `web/LICENSE.solid-glass`).

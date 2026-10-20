@@ -90,3 +90,7 @@ powershell -ExecutionPolicy Bypass -File schedule_daily.ps1   # 매일 10:00 실
   트렌딩 일수가 많은 저장소에 작은 가중치(`popularity_weight`)를 줍니다.
   더 가벼운 모델이 필요하면 `build_index.py --model intfloat/multilingual-e5-small`.
 - **GPU**: `pyproject.toml`이 CUDA 12.8용 torch를 받도록 설정되어 있습니다 (RTX 50 시리즈 지원). GPU가 없으면 CPU로 동작합니다.
+
+## 라이선스
+
+MIT. `web/`의 UI 컴포넌트는 [Solid Glass](https://github.com/deeplethe/solid-glass)(MIT, `web/LICENSE.solid-glass`)에서 가져왔습니다.
